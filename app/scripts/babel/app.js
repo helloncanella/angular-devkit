@@ -1,16 +1,54 @@
 'use strict';
+(function(angular){
 
-var myApp = require('angular').module('myApp', []);
+  var app = angular.module('app', []);
 
-myApp.factory('Data', function () {
-  return { message: 'I\'m data from a service' };
-});
+  app.controller('CalendarController', function CalendarController($scope) {
 
-myApp.filter('reverse', function () {
-  return function (text) {
+    $scope.availability = {
+      start:12,
+      end:20
+    };
 
-    console.log('LALAL',text.split('').reverse().join(''));
+    $scope.time = function(){
+      var timeArray = [],
+          time = this.availability.start;
 
-    return text.split('').reverse().join('');
-  };
-});
+      while(time<=this.availability.end){
+        timeArray.push(time);
+        time+=0.5;
+      }
+
+      return timeArray;
+    };
+
+    $scope.thirtyDays = function(today){
+
+        today = today || new Date(); // today may be defined in the argument
+
+        var
+          day,
+          year = today.getFullYear(),
+          month = today.getMonth(),
+          todayDate = today.getDate(),
+          thirtyDays = [];
+
+      for(var i=0; 30>i; i++){
+        day = new Date(year, month, todayDate + i);
+        thirtyDays.push(day);
+      }
+
+      return thirtyDays;
+    };
+
+  });
+
+  app.directive('gridCalendar',function(){
+    return{
+      templateUrl:'view/templates/grid-calendar.html'
+    };
+  });
+
+
+
+})(window.angular|| require('angular'));
